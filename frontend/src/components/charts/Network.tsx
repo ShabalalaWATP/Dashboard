@@ -89,8 +89,7 @@ export function Network({ nodes, edges, height = 520 }: {
     return { pos };
   }, [nodes, H]);
 
-  const maxCount = Math.max(1, ...nodes.map((n) => n.count));
-  const maxEdge  = Math.max(1, ...edges.map((e) => e.value));
+  const maxEdge = Math.max(1, ...edges.map((e) => e.value));
 
   // Wheel-zoom about the cursor — native listener with {passive:false} so we
   // can preventDefault (React's synthetic onWheel is passive and cannot).

@@ -6,15 +6,15 @@ from .database import engine, SessionLocal
 from . import models
 
 PROJECT_COLUMN_DDL = {
-    # Earlier additions — keep for upgrades from older dashboards
+    # Earlier additions — keep for upgrades from older dashboards. The DDL
+    # only runs `ALTER TABLE ADD COLUMN` when the column is missing, so this
+    # map stays safe to ship on forever.
     "target_vendor":             ("VARCHAR(128)", "''"),
     "target_product":            ("VARCHAR(128)", "''"),
     "cpu_arch":                  ("VARCHAR(32)",  "''"),
-    "priority":                  ("VARCHAR(16)",  "'Medium'"),       # legacy, unused now
     "outcome":                   ("VARCHAR(32)",  "'In Progress'"),
     "project_lead":              ("VARCHAR(128)", "''"),
     "ticket_ref":                ("VARCHAR(64)",  "''"),
-    "classification":            ("VARCHAR(32)",  "'OFFICIAL'"),      # legacy, unused now
     "repo_url":                  ("VARCHAR(256)", "''"),
     "wiki_url":                  ("VARCHAR(256)", "''"),
     "confluence_url":            ("VARCHAR(256)", "''"),

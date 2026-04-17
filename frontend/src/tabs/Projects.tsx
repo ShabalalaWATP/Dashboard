@@ -7,7 +7,7 @@ import { Card } from "../components/Card";
 import { MarkdownBody } from "../components/Markdown";
 import { useData } from "../filters";
 import { STAGE_COLOURS, STAGE_ORDER } from "../stagePalette";
-import { fmtDate, fmtDateRange } from "../dates";
+import { fmtDateRange } from "../dates";
 import type { Project } from "../types";
 
 

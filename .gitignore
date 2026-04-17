@@ -3,6 +3,8 @@ node_modules/
 dist/
 .vite/
 *.log
+# TypeScript incremental-compile cache — regenerated on every build, not source.
+*.tsbuildinfo
 
 # -- Python ---------------------------------------------------------------
 __pycache__/

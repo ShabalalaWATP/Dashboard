@@ -101,7 +101,6 @@ export function computeAggregations(all: Project[], filtered: Project[]) {
 
   const type_breakdown = countBy(filtered, (p) => p.project_type);
   const hub_breakdown = countBy(filtered, (p) => p.campaign_hub);
-  const outcome_breakdown = countBy(filtered.filter((p) => p.status === "closed"), (p) => p.outcome);
 
   // --- Workload over time --------------------------------------------------
   // Two series, one chart:
@@ -456,7 +455,7 @@ export function computeAggregations(all: Project[], filtered: Project[]) {
       avg_team_size, max_team_size, median_team_size, median_duration,
     },
     recent_projects: recent,
-    type_breakdown, hub_breakdown, outcome_breakdown,
+    type_breakdown, hub_breakdown,
     over_time, stacked_type_tech, treemap_tech, heatmap_type_hub,
     stage_avg, stage_flow, histogram,
     tool_freq, os_dist, language_dist, arch_dist, tag_freq,
