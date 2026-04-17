@@ -1,0 +1,39 @@
+# -- Node / Vite -----------------------------------------------------------
+node_modules/
+dist/
+.vite/
+*.log
+
+# -- Python ---------------------------------------------------------------
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.venv/
+backend/.venv/
+*.egg-info/
+.pytest_cache/
+
+# -- App runtime state ----------------------------------------------------
+# Never commit the database, uploads, or JWT secret. The directory itself
+# is kept via data/.gitkeep so run.sh can write into it on first launch.
+data/
+!data/.gitkeep
+
+# -- OS / editor ----------------------------------------------------------
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# -- Secrets --------------------------------------------------------------
+.env
+.env.*
+*.pem
+*.key
+
+# -- Offline-bundle artefact (see README "Deploying to an air-gapped Ubuntu VM")
+offline/
+dashboard-offline.tgz

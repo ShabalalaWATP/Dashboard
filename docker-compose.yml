@@ -1,0 +1,17 @@
+services:
+  app:
+    build: .
+    image: cyber-research-portfolio:latest
+    container_name: crp
+    restart: unless-stopped
+    ports:
+      - "8000:8000"
+    volumes:
+      # Persist the SQLite DB and uploaded logos on the host
+      - ./data:/app/data
+    environment:
+      # Uncomment to pin a JWT secret (otherwise one is auto-generated on first run)
+      # JWT_SECRET: "replace-me"
+      TZ: UTC
+    # Optional: seed demo data the first time you bring the stack up
+    # command: sh -c "python scripts/seed.py || true; exec uvicorn app.main:app --app-dir backend --host 0.0.0.0 --port 8000"
