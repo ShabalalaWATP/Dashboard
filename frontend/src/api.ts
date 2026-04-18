@@ -8,6 +8,15 @@ export function setToken(t: string | null) {
   else localStorage.removeItem(TOKEN_KEY);
 }
 
+/** Fired whenever the backend rejects a request with 401/403 while we were
+ *  holding a token — i.e. the token was valid at some point but is no longer
+ *  accepted (12 h JWT expiry, admin revoked the user, JWT secret rotated,
+ *  etc). AuthProvider listens for this, clears its user state, and pops the
+ *  login modal. We dispatch on `window` because the listener lives in a
+ *  React provider that isn't aware of `api.ts` module identity. */
+export const AUTH_EXPIRED_EVENT = "crp:auth-expired";
+
+
 async function request<T>(path: string, init: RequestInit = {}): Promise<T> {
   const headers: Record<string, string> = {
     "Content-Type": "application/json",
@@ -17,6 +26,18 @@ async function request<T>(path: string, init: RequestInit = {}): Promise<T> {
   if (tok) headers["Authorization"] = `Bearer ${tok}`;
   const res = await fetch(path, { ...init, headers });
   if (!res.ok) {
+    // Session expiry: if we sent a token and got 401/403 back, wipe the
+    // token and let the AuthProvider know. We do NOT fire this when there
+    // was no token — a 401 on an unauthenticated request is just "please
+    // log in", not "your session died", and the login modal is already the
+    // natural next UI state.
+    if ((res.status === 401 || res.status === 403) && tok) {
+      setToken(null);
+      try {
+        window.dispatchEvent(new CustomEvent(AUTH_EXPIRED_EVENT));
+      } catch { /* SSR / jsdom — ignore */ }
+      throw new Error("Your session has expired. Please log in again.");
+    }
     let msg = `${res.status} ${res.statusText}`;
     try {
       const j = await res.json();
@@ -42,7 +63,14 @@ export const api = {
     const tok = getToken();
     if (tok) headers["Authorization"] = `Bearer ${tok}`;
     const res = await fetch(p, { method: "POST", body: fd, headers });
-    if (!res.ok) throw new Error(`${res.status} ${res.statusText}`);
+    if (!res.ok) {
+      if ((res.status === 401 || res.status === 403) && tok) {
+        setToken(null);
+        try { window.dispatchEvent(new CustomEvent(AUTH_EXPIRED_EVENT)); } catch { /* ignore */ }
+        throw new Error("Your session has expired. Please log in again.");
+      }
+      throw new Error(`${res.status} ${res.statusText}`);
+    }
     return res.json();
   },
   login: async (username: string, password: string) => {
